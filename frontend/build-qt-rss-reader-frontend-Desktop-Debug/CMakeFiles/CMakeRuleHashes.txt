@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+f632bfb469992ef0273f38c21b0dc002 CMakeFiles/qt-rss-reader-frontend_autogen
