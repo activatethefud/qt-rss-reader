@@ -1,15 +1,24 @@
 import mariadb
 import sys
+from config import *
 
 conn = mariadb.connect(
-        user='qt-rss-user',
-        password='qt-rss-user-password',
-        host='mysql-db',
-        port=3306,
-        database='qt-rss'
+        user=DB_USER
+        password=DB_PASSWORD
+        host=DB_HOST_DEBUG
+        port=DB_POST
+        database=DB_NAME
 )
 
 cur = conn.cursor()
+
+def get_all_feeds():
+        for row in cur.execute("SELECT * FROM Feeds"):
+                print(row)
+
+def add_new_feed(feed_url):
+        cur.execute(f"INSERT INTO Feeds(Url) VALUES ('{feed_url}');")
+        conn.commit()
 
 def init():
 
