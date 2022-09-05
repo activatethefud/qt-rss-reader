@@ -1,0 +1,7 @@
+SERVER_URL = 'http://localhost:5000'
+DB_USER = 'qt-rss-user'
+DB_PASSWORD = 'qt-rss-user-password'
+DB_HOST_DEBUG = 'localhost'
+DB_HOST = 'mysql-db'
+DB_PORT = '3606'
+DB_NAME = 'qt-rss'
