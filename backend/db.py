@@ -1,6 +1,7 @@
 import mariadb
 import sys
 from config import *
+import bs4
 
 conn = mariadb.connect(
         user=DB_USER,
@@ -29,6 +30,27 @@ def add_new_feed(feed_url):
         cur.execute(f"INSERT INTO Feeds(Url) VALUES ('{feed_url}');")
         conn.commit()
 
+def delete_item(item: bs4.element.Tag):
+        cur.execute("DELETE FROM Items WHERE Id = MD5(?)", (str(item),))
+        conn.commit()
+
+def add_new_item(url, item: bs4.element.Tag):
+
+        cur.execute("SELECT * FROM Items WHERE Id = MD5(?) LIMIT 1", (str(item),))
+
+        if len(list(cur)) > 0:
+                return
+
+        cur.execute("""
+                INSERT INTO Items(Id, Url, Content) VALUES(
+                        MD5(?),
+                        ?,
+                        ?
+                )
+        """,(str(item), url, str(item)))
+
+        conn.commit()
+
 def init():
 
         try:
@@ -38,6 +60,22 @@ def init():
                                 Url VARCHAR(255) PRIMARY KEY
                         );
                 """)
+                conn.commit()
 
+                
         except:
+                pass
+        
+        try:
+                cur.execute("""
+                        CREATE TABLE Items(
+                                Id VARCHAR(255) PRIMARY KEY,
+                                Url VARCHAR(255) NOT NULL,
+                                Content TEXT NOT NULL
+                        )
+                """)
+
+                conn.commit()
+
+        except Exception as e:
                 pass
