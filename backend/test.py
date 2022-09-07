@@ -22,7 +22,7 @@ def test_add_new_feed(feed_url = "https://www.politika.rs/rss/"):
         # Cleanup
         db.delete_feed(feed_url)
 
-def test_add_new_item(feed_url = "https://www.politika.rs/rss"):
+def test_add_new_item(feed_url = EXAMPLE_RSS_FEED):
 
         resp = req.get(feed_url)
         bs_obj = BeautifulSoup(resp.content,'lxml')
@@ -33,13 +33,19 @@ def test_add_new_item(feed_url = "https://www.politika.rs/rss"):
         db.delete_item(item)
         db.add_new_item(feed_url, item)
         
+def test_get_feed_items(feed_url = EXAMPLE_RSS_FEED):
+        resp = req.get(feed_url)
+        print(resp.content)
 
 tests = [
         test_add_new_feed,
-        test_add_new_item
+        test_add_new_item,
+        test_get_feed_items
 ]
 
 if __name__ == "__main__":
 
         for test in tests:
                 test()
+        
+        print("All tests pass!")

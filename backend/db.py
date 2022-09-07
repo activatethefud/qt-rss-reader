@@ -15,11 +15,10 @@ cur = conn.cursor()
 
 def get_all_feeds():
         cur.execute("SELECT * FROM Feeds")
-        for (url) in cur:
-                print(url)
+        return list(cur)
 
 def select_feed(feed_url):
-        cur.execute(f"SELECT Url FROM Feeds where Url = '{feed_url}'")
+        cur.execute(f"SELECT * FROM Items where Url = '{feed_url}'")
         return list(cur)
 
 def delete_feed(feed_url):
@@ -27,8 +26,11 @@ def delete_feed(feed_url):
         conn.commit()
 
 def add_new_feed(feed_url):
-        cur.execute(f"INSERT INTO Feeds(Url) VALUES ('{feed_url}');")
-        conn.commit()
+        try:
+                cur.execute(f"INSERT INTO Feeds(Url) VALUES ('{feed_url}');")
+                conn.commit()
+        except Exception as e:
+                print(e)
 
 def delete_item(item: bs4.element.Tag):
         cur.execute("DELETE FROM Items WHERE Id = MD5(?)", (str(item),))
@@ -71,7 +73,8 @@ def init():
                         CREATE TABLE Items(
                                 Id VARCHAR(255) PRIMARY KEY,
                                 Url VARCHAR(255) NOT NULL,
-                                Content TEXT NOT NULL
+                                Content TEXT NOT NULL,
+                                Date TIMESTAMP NOT NULL DEFAULT NOW()
                         )
                 """)
 
