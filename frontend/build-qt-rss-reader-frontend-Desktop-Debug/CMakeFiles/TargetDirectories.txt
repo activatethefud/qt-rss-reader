@@ -1,8 +1,0 @@
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/qt-rss-reader-frontend.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/list_install_components.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/install.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/install/local.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/install/strip.dir
-/home/nikola/Documents/Faks/AZRS/qt-rss-reader/frontend/build-qt-rss-reader-frontend-Desktop-Debug/CMakeFiles/qt-rss-reader-frontend_autogen.dir
