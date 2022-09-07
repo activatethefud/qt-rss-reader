@@ -1,7 +1,15 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import db
 
 app = Flask(__name__)
+
+@app.route('/feed_items', methods = ["GET"])
+def get_feed_items():
+        try:
+                feed_url = request.args["url"]
+                return jsonify(db.select_feed("feed_url"))
+        except Exception as e:
+                return str(e), 500
 
 @app.route('/new_feed', methods = ["GET"])
 def new_feed():
