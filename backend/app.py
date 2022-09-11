@@ -1,7 +1,16 @@
 from flask import Flask, request, jsonify
 import db
+from collector import Collector
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
+_collector = None
+
+@app.route('/all_feeds', methods = ["GET"])
+def get_all_feeds():
+        try:
+                return jsonify(db.get_all_feeds())
+        except Exception as e:
+                return str(e), 500
 
 @app.route('/feed_items', methods = ["GET"])
 def get_feed_items():
@@ -37,7 +46,8 @@ def delete_feed():
 def hello_world():
         return 'Hello, world!'
 
-db.init()
-
-#if __name__ == "__main__":
-#        db.init()
+if __name__ == "__main__":
+        db.init()
+        _collector = Collector()
+        _collector.start()
+        app.run()

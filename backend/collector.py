@@ -3,19 +3,19 @@ from config import *
 import requests as req
 from bs4 import BeautifulSoup
 
-class Collector:
+class Collector(threading.Thread):
 
     def __init__(self):
-        self.collecting = True
-        self.collect()
-        pass
+        super(Collector, self).__init__()
+        self.collecting = False
 
 
     def cancel(self):
         self.collecting = False
-        self.collector_thread._stop()
 
-    def collect(self):
+    def run(self):
+
+        self.collecting = True
 
         def _collect():
 
@@ -24,9 +24,14 @@ class Collector:
 
                 print(feed_urls)
 
-                for (feed_url,) in feed_urls:
+                for feed_url in feed_urls:
 
-                    resp = req.get(feed_url)
+                    try:
+                        resp = req.get(feed_url)
+                    except Exception as e:
+                        print(e)
+                        continue
+
                     bs_obj = BeautifulSoup(resp.content, 'lxml')
 
                     print("Collecting: " + feed_url)
@@ -36,8 +41,8 @@ class Collector:
                     for item in items:
                         db.add_new_item(feed_url, item)
                 
+                
+                print("Sleeping for: " + str(5*MINUTE))
                 time.sleep(5*MINUTE)
-        
-        self.collector_thread = threading.Thread(
-            target = _collect()
-        )
+
+        _collect() 

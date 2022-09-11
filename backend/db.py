@@ -15,7 +15,7 @@ cur = conn.cursor()
 
 def get_all_feeds():
         cur.execute("SELECT * FROM Feeds")
-        return list(cur)
+        return list(url for (url,) in cur)
 
 def select_feed(feed_url):
         cur.execute(f"SELECT * FROM Items where Url = '{feed_url}'")
