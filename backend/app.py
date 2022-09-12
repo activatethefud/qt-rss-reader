@@ -55,4 +55,4 @@ if __name__ == "__main__":
         db.init()
         _collector = Collector()
         _collector.start()
-        app.run()
+        app.run(host='0.0.0.0')

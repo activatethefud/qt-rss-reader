@@ -8,6 +8,6 @@ WORKDIR /usr/qt-rss-backend
 RUN apt-get update \
         && apt-get install libmariadb-dev python3-pip -y
 
-RUN pip3 install --upgrade mariadb flask bs4 requests
+RUN pip3 install --upgrade mariadb flask beautifulsoup4 requests lxml
 
-ENTRYPOINT ["flask","run","--host=0.0.0.0"]
+ENTRYPOINT ["python3","app.py"]
