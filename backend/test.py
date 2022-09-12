@@ -25,7 +25,7 @@ def test_add_new_feed(feed_url = "https://www.politika.rs/rss/"):
 def test_add_new_item(feed_url = EXAMPLE_RSS_FEED):
 
         resp = req.get(feed_url)
-        bs_obj = BeautifulSoup(resp.content,'lxml')
+        bs_obj = BeautifulSoup(resp.content,'lxml-xml')
         items = bs_obj.find_all("item")
 
         item = items[1]

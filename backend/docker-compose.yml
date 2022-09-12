@@ -1,10 +1,10 @@
 version: '3.9'
 services:
-        #qt-rss-backend:
-        #        build: ./
-        #        restart: always
-        #        ports:
-        #                - 5000:5000
+        qt-rss-backend:
+                build: ./
+                restart: always
+                ports:
+                        - 5000:5000
 
         mysql-db:
                 image: mariadb
