@@ -6,7 +6,7 @@ import bs4
 conn = mariadb.connect(
         user=DB_USER,
         password=DB_PASSWORD,
-        host=DB_HOST_DEBUG,
+        host=DB_HOST,
         port=DB_PORT,
         database=DB_NAME
 )
@@ -15,11 +15,17 @@ cur = conn.cursor()
 
 def get_all_feeds():
         cur.execute("SELECT * FROM Feeds")
-        return list(cur)
+        return list(url for (url,) in cur)
 
 def select_feed(feed_url):
-        cur.execute(f"SELECT * FROM Items where Url = '{feed_url}'")
-        return list(cur)
+        query = f"SELECT * FROM `Items` WHERE `Url` = '{feed_url}'".encode("ascii")
+        cur.execute(query)
+        return list({
+                "Id" : id,
+                "Url" : url,
+                "Content" : content,
+                "Date" : date.strftime("%s")
+        } for (id,url,content,date) in cur)
 
 def delete_feed(feed_url):
         cur.execute(f"DELETE FROM Feeds WHERE Url = '{feed_url}'")
