@@ -5,6 +5,11 @@ from collector import Collector
 app: Flask = Flask(__name__)
 _collector = None
 
+@app.route('/reset', methods = ["GET"])
+def reset_collector():
+        _collector.cancel()
+        _collector.run()
+
 @app.route('/all_feeds', methods = ["GET"])
 def get_all_feeds():
         try:
@@ -16,7 +21,7 @@ def get_all_feeds():
 def get_feed_items():
         try:
                 feed_url = request.args["url"]
-                return jsonify(db.select_feed("feed_url"))
+                return jsonify(db.select_feed(feed_url))
         except Exception as e:
                 return str(e), 500
 
