@@ -24,26 +24,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Network Xml REQUIRED)
 
 # qt5_use_modules(Network)
 
-if(ANDROID)
-  add_library(qt-rss-frontend SHARED
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-  )
-else()
-  add_executable(qt-rss-frontend
-    rsshelper.cpp
-    rsshelper.h
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-  )
-endif()
+add_executable(qt-rss-frontend
+        feeditem.cpp
+        feeditem.h
+        rsshelper.cpp
+        rsshelper.h
+        main.cpp
+        mainwindow.cpp
+        mainwindow.h
+        mainwindow.ui
+)
 
-target_link_libraries(qt-rss-frontend PRIVATE Qt5::Widgets Qt5::Network)
+target_link_libraries(qt-rss-frontend PRIVATE Qt5::Widgets Qt5::Network Qt5::Xml)

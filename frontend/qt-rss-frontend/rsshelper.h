@@ -10,6 +10,8 @@
 #include <QUrlQuery>
 #include <QMapIterator>
 
+#include "feeditem.h"
+
 class RSSHelper : public QObject
 {
     Q_OBJECT
@@ -20,8 +22,13 @@ public:
     const QString apiUrl = "http://localhost:5000";
     const QString allFeedsEndpoint = apiUrl + "/all_feeds";
     const QString addFeedEndpoint = apiUrl + "/new_feed?";
+    const QString feedEndpoint = apiUrl + "/feed_items?";
+    const QString resetEndpoint = apiUrl + "/reset";
     RSSHelper();
     QVector<QString> rssFeeds;
+    QVector<FeedItem*> feedItems;
+
+    void resetCollector();
 
     QNetworkReply* get(const QString &url, const QMap<QString,QString> &params)
     {
@@ -39,12 +46,14 @@ public:
     }
 
     void loadRssFeeds();
+    void loadRssFeed(const QString &feedUrl);
 
 public slots:
     void setRssFeeds();
 
 signals:
     void loadedRssFeeds();
+    void loadedRssFeed();
 };
 
 #endif // RSSHELPER_H

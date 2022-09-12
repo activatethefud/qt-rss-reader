@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QModelIndex>
+#include <QTimer>
 #include "rsshelper.h"
 
 QT_BEGIN_NAMESPACE
@@ -16,15 +18,22 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void error(const QString &errorMessage);
+
 private:
     QString mNewFeed;
     RSSHelper rssHelper;
+    QString mSelectedRssFeed = "";
 
 public slots:
     void test();
     void newFeedPopup();
     void sendNewRssUrl();
     void setNewFeed(const QString &url);
+    void populateModels();
+    void populateFeedView();
+    void openFeedIteminBrowser(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;
