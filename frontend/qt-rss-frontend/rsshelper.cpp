@@ -19,7 +19,7 @@ RSSHelper::resetCollector()
 {
     QNetworkReply *resp = get(resetEndpoint, {});
 
-    connect(resp, &QNetworkReply::finished, [this]() { loadRssFeeds(); });
+    connect(resp, &QNetworkReply::finished, this, [this]() { loadRssFeeds(); });
 }
 
 void
@@ -28,7 +28,7 @@ RSSHelper::loadRssFeed(const QString &feedUrl)
     feedItems = {};
     QNetworkReply *resp = get(feedEndpoint, {{"url", feedUrl}});
 
-    connect(resp, &QNetworkReply::finished, [resp, this]() {
+    connect(resp, &QNetworkReply::finished, this, [resp, this]() {
         QJsonDocument jsonDoc = QJsonDocument::fromJson(resp->readAll());
         QJsonArray jsonArray = jsonDoc.array();
 
