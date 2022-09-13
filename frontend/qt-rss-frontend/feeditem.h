@@ -1,21 +1,31 @@
 #ifndef FEEDITEM_H
 #define FEEDITEM_H
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 
 class FeedItem
 {
-public:
+  public:
     FeedItem();
     FeedItem(QString Id, QString Url, QString Content, QDateTime Date);
-    QString toString();
+    QString
+    toString();
 
-    QString getContent() { return Content; }
-    QDateTime getDate() { return Date; }
-    QString getLink();
+    QString
+    getContent()
+    {
+        return Content;
+    }
+    QDateTime
+    getDate()
+    {
+        return Date;
+    }
+    QString
+    getLink();
 
-private:
+  private:
     QString Id, Url, Content;
     QDateTime Date;
 };

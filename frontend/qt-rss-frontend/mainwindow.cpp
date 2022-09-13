@@ -4,36 +4,34 @@
 
 #include <iostream>
 
+#include <QAbstractButton>
+#include <QComboBox>
+#include <QDesktopServices>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNodeList>
+#include <QHeaderView>
+#include <QJsonValue>
+#include <QLabel>
+#include <QLineEdit>
+#include <QList>
 #include <QObject>
 #include <QPushButton>
-#include <QAbstractButton>
-#include <QWidget>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include <QString>
-#include <QStringListModel>
-#include <QStringList>
-#include <QJsonValue>
-#include <QComboBox>
-#include <QStandardItemModel>
-#include <QStandardItem>
-#include <QDomDocument>
-#include <QDomNodeList>
-#include <QDomElement>
-#include <QList>
-#include <QHeaderView>
-#include <QTreeView>
-#include <QDesktopServices>
-#include <QUrl>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QtNetwork/QNetworkReply>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QString>
+#include <QStringList>
+#include <QStringListModel>
+#include <QTreeView>
+#include <QUrl>
+#include <QVBoxLayout>
+#include <QWidget>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     mNewFeed = "";
     ui->setupUi(this);
@@ -43,37 +41,36 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnQuit, SIGNAL(pressed()), this, SLOT(close()));
     connect(&rssHelper, SIGNAL(loadedRssFeeds()), this, SLOT(populateModels()));
     connect(ui->tableView, &QTreeView::clicked, this, &MainWindow::openFeedIteminBrowser);
-
 }
 
-void MainWindow::openFeedIteminBrowser(const QModelIndex &index)
+void
+MainWindow::openFeedIteminBrowser(const QModelIndex &index)
 {
     int rowIdx = index.row();
     QDesktopServices::openUrl(QUrl(rssHelper.feedItems[rowIdx]->getLink()));
 }
 
-void MainWindow::error(const QString &errorMessage)
+void
+MainWindow::error(const QString &errorMessage)
 {
     ui->lblError->setText(errorMessage);
     ui->lblError->show();
 
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [this]() {
-        ui->lblError->hide();
-    });
+    connect(timer, &QTimer::timeout, [this]() { ui->lblError->hide(); });
     timer->start(10000);
 }
 
-
-void MainWindow::populateFeedView()
+void
+MainWindow::populateFeedView()
 {
     QStandardItemModel *model = new QStandardItemModel();
 
-    //model->setHeaderData(0, Qt::Horizontal, "Date", Qt::DisplayRole);
-    //model->setHeaderData(1, Qt::Horizontal, "Title", Qt::DisplayRole);
-    //model->setHeaderData(2, Qt::Horizontal, "Description", Qt::DisplayRole);
+    // model->setHeaderData(0, Qt::Horizontal, "Date", Qt::DisplayRole);
+    // model->setHeaderData(1, Qt::Horizontal, "Title", Qt::DisplayRole);
+    // model->setHeaderData(2, Qt::Horizontal, "Description", Qt::DisplayRole);
 
-    for(int i=0;i<rssHelper.feedItems.size();++i) {
+    for (int i = 0; i < rssHelper.feedItems.size(); ++i) {
         FeedItem *item = rssHelper.feedItems[i];
         QString itemContent = item->getContent();
         QDomDocument itemDom;
@@ -93,15 +90,8 @@ void MainWindow::populateFeedView()
         QStandardItem *standardItem = new QStandardItem();
         standardItem->setEditable(false);
 
-        model->appendRow(QList<QStandardItem*>(
-                                       {
-                                         new QStandardItem(date.toString("ddd MMMM d yyyy")),
-                                         new QStandardItem(title),
-                                         new QStandardItem(description)
-                                       }
-                                       ));
-
-
+        model->appendRow(QList<QStandardItem *>({new QStandardItem(date.toString("ddd MMMM d yyyy")),
+            new QStandardItem(title), new QStandardItem(description)}));
     }
 
     QHeaderView *header = new QHeaderView(Qt::Horizontal, ui->tableView);
@@ -111,15 +101,16 @@ void MainWindow::populateFeedView()
     ui->tableView->setModel(model);
 }
 
-void MainWindow::populateModels()
+void
+MainWindow::populateModels()
 {
     // Initial data setup
     QStringListModel *model = new QStringListModel();
     QStringList list;
 
-    if(rssHelper.rssFeeds.size() == 0) return;
+    if (rssHelper.rssFeeds.size() == 0) return;
 
-    for(int i=0;i<rssHelper.rssFeeds.size(); ++i) {
+    for (int i = 0; i < rssHelper.rssFeeds.size(); ++i) {
         QJsonValue val = rssHelper.rssFeeds.at(i);
         list << val.toString();
     }
@@ -137,31 +128,30 @@ void MainWindow::populateModels()
     });
 }
 
-void MainWindow::sendNewRssUrl()
+void
+MainWindow::sendNewRssUrl()
 {
-    QRegularExpression rxUrl(R"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
+    QRegularExpression rxUrl(
+        R"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
     QRegularExpressionMatch urlMatch = rxUrl.match(mNewFeed);
 
-    if(urlMatch.hasMatch()) {
-        QNetworkReply *resp = rssHelper.get(rssHelper.addFeedEndpoint, {
-                          {"url", mNewFeed}
-                              });
+    if (urlMatch.hasMatch()) {
+        QNetworkReply *resp = rssHelper.get(rssHelper.addFeedEndpoint, {{"url", mNewFeed}});
 
-        connect(resp, &QNetworkReply::finished, [this]() {
-            rssHelper.resetCollector();
-        });
-    }
-    else {
+        connect(resp, &QNetworkReply::finished, [this]() { rssHelper.resetCollector(); });
+    } else {
         error("ERROR: Url is not valid!");
     }
 }
 
-void MainWindow::setNewFeed(const QString &newUrl)
+void
+MainWindow::setNewFeed(const QString &newUrl)
 {
     mNewFeed = newUrl;
 }
 
-void MainWindow::newFeedPopup()
+void
+MainWindow::newFeedPopup()
 {
     QWidget *window = new QWidget;
     window->setWindowTitle("New RSS Feed");
@@ -184,7 +174,8 @@ void MainWindow::newFeedPopup()
     window->show();
 }
 
-void MainWindow::test()
+void
+MainWindow::test()
 {
     std::cout << "Hello, world!" << std::endl;
 }
@@ -193,4 +184,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-

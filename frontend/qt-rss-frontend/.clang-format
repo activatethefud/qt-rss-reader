@@ -1,0 +1,20 @@
+﻿---
+BasedOnStyle: Microsoft
+AlignAfterOpenBracket: DontAlign
+AlignTrailingComments: 'true'
+AllowAllArgumentsOnNextLine: 'true'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'false'
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: 'true'
+AlwaysBreakAfterReturnType: All
+AlwaysBreakBeforeMultilineStrings: 'true'
+BinPackArguments: 'true'
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Linux
+Cpp11BracedListStyle: 'true'
+NamespaceIndentation: Inner
+Standard: Cpp11
+UseTab: Never
+
+...
