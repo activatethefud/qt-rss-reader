@@ -57,7 +57,7 @@ MainWindow::error(const QString &errorMessage)
     ui->lblError->show();
 
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [this]() { ui->lblError->hide(); });
+    connect(timer, &QTimer::timeout, this, [this]() { ui->lblError->hide(); });
     timer->start(10000);
 }
 
@@ -77,7 +77,6 @@ MainWindow::populateFeedView()
         itemDom.setContent(itemContent);
 
         QDomNodeList links = itemDom.elementsByTagName("link");
-        QString link = links.at(0).toElement().text();
 
         QDomNodeList titles = itemDom.elementsByTagName("title");
         QString title = titles.at(0).toElement().text();
@@ -104,11 +103,11 @@ MainWindow::populateFeedView()
 void
 MainWindow::populateModels()
 {
+    if (rssHelper.rssFeeds.size() == 0) return;
+
     // Initial data setup
     QStringListModel *model = new QStringListModel();
     QStringList list;
-
-    if (rssHelper.rssFeeds.size() == 0) return;
 
     for (int i = 0; i < rssHelper.rssFeeds.size(); ++i) {
         QJsonValue val = rssHelper.rssFeeds.at(i);
@@ -122,7 +121,7 @@ MainWindow::populateModels()
     rssHelper.loadRssFeed(mSelectedRssFeed);
 
     connect(&rssHelper, &RSSHelper::loadedRssFeed, this, &MainWindow::populateFeedView);
-    connect(ui->comboBoxFeeds, &QComboBox::currentTextChanged, [this]() {
+    connect(ui->comboBoxFeeds, &QComboBox::currentTextChanged, this, [this]() {
         QString newText = ui->comboBoxFeeds->currentText();
         rssHelper.loadRssFeed(newText);
     });
@@ -131,14 +130,14 @@ MainWindow::populateModels()
 void
 MainWindow::sendNewRssUrl()
 {
-    QRegularExpression rxUrl(
+    static QRegularExpression rxUrl(
         R"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
     QRegularExpressionMatch urlMatch = rxUrl.match(mNewFeed);
 
     if (urlMatch.hasMatch()) {
         QNetworkReply *resp = rssHelper.get(rssHelper.addFeedEndpoint, {{"url", mNewFeed}});
 
-        connect(resp, &QNetworkReply::finished, [this]() { rssHelper.resetCollector(); });
+        connect(resp, &QNetworkReply::finished, this, [this]() { rssHelper.resetCollector(); });
     } else {
         error("ERROR: Url is not valid!");
     }
